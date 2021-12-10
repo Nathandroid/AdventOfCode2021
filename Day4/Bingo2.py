@@ -8,7 +8,7 @@ def checkRows(board):
 		for col in range(len(board)):
 			if board[row][col] == -1:
 				numMarked += 1
-		if numMarked == 5: #if it's a winning row
+		if numMarked == len(board): #if it's a winning row
 			return(True)
 	return(False)
 
@@ -19,7 +19,7 @@ def checkColumns(board):
 		for row in range(len(board)):
 			if board[row][col] == -1:
 				numMarked += 1
-		if numMarked == 5: #if it's a winning column
+		if numMarked == len(board): #if it's a winning column
 			return(True)
 	return(False)
 
@@ -44,6 +44,8 @@ def calculateScore(board, lastNum):
 				sum += board[row][col]
 
 	print('Winning board:\n', board)
+	print('Sum: ', sum)
+	print('Last num: ', lastNum)
 	print('Winning board\'s score: ', sum * lastNum)
 
 
@@ -68,10 +70,16 @@ while(inFile.readline()):
 	boards.append(board)
 
 for num in numList: #every time a new number is called
+	toRemove = [] #the list of boards to remove
 	for board in boards: #check every board
 		markNumber(board, num) #mark off given number if present
 		if(isWinner(board)): #is this board a winner
-			calculateScore(board, num)
-			quit()
-
+			if len(boards) > 1: #if there's more than one board left
+				toRemove.append(board) #remove it from the list
+			else:
+				calculateScore(board, num)
+				quit()
+	for board in toRemove:
+		boards.remove(board)
+				
 #try marking a number on a board, if successful, check if it's a winner, if not, move on
